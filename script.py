@@ -16,7 +16,8 @@ def main_sequential(list1, list2, list3):  # Main wrapper for sequential example
     s = time.perf_counter()  # start timer
     outcomes = [cal_average(ls) for ls in [list1, list2, list3]]
 
-    [print(f"Avg. list{i+1} = {outcomes[i]}") for i in range(len(outcomes))]  # debug
+    # print("<INFO> Sequential Programming:")  # debug
+    # [print(f"<INFO> Avg. list{i+1} = {outcomes[i]}") for i in range(len(outcomes))]  # debug
 
     elapsed = time.perf_counter() - s  # end timer
     print("Sequential Programming Elapsed Time: " + str(elapsed) + " seconds")
@@ -34,7 +35,10 @@ async def main_async(list1, list2, list3):  # Main wrapper for asynchronous exam
     s = time.perf_counter()
     # your code goes here
     tasks = [cal_average_async(ls) for ls in [list1, list2, list3]]
-    await asyncio.gather(*tasks)  # run tasks concurrently
+    # print("<INFO> Starting asynchronous calculation")  # debug
+    # print("<INFO> Tasks: ", tasks)  # debug
+    results = await asyncio.gather(*tasks)  # run tasks concurrently
+    # print("<INFO> Results: ", results)  # debug
 
     elapsed = time.perf_counter() - s
     print("Asynchronous Programming Elapsed Time: " + str(elapsed) + " seconds")
@@ -45,12 +49,15 @@ def main_threading(list1, list2, list3):  # Main wrapper for threading example
     lists = [list1, list2, list3]
     threads = []
 
+    # print("<INFO> Starting threading calculation")  # debug
     for i in range(len(lists)):
         x = threading.Thread(target=cal_average, args=(lists[i],))  # create thread
         threads.append(x)  # keep track of threads
         x.start()  # start thread
+    # print("<INFO> All threads have been started")  # debug
     for t in threads:
         t.join()  # wait for all threads to finish
+    # print("<INFO> All threads have finished")  # debug
 
     elapsed = time.perf_counter() - s
     print("Threading Elapsed Time: " + str(elapsed) + " seconds")
@@ -62,8 +69,11 @@ def main_multiprocessing(list1, list2, list3):  # Main wrapper for multiprocessi
     lists = [list1, list2, list3]
     processes = [Process(target=cal_average, args=(lists[i],)) for i in range(len(lists))]
 
+    # print("<INFO> Starting multiprocessing calculation")  # debug
     [p.start() for p in processes]  # start processes
+    # print("<INFO> All processes have been started")  # debug
     [p.join() for p in processes]  # wait for all processes to finish
+    # print("<INFO> All processes have finished")  # debug
 
     elapsed = time.perf_counter() - s
     print("Multiprocessing Elapsed Time: " + str(elapsed) + " seconds")
@@ -72,7 +82,7 @@ def main_multiprocessing(list1, list2, list3):  # Main wrapper for multiprocessi
 if __name__ == '__main__':  # Need to use this if-statement so multiprocessing doesn't cause an infinite loop
     l1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Three lists we are trying to calculate average on
     l2 = [2, 4, 6, 8, 10]
-    l3 = [1, 3, 5, 7, 9, 11]
+    l3 = [1, 3, 5, 7, 9, 11, 13]
     main_sequential(l1, l2, l3)
     loop = asyncio.get_event_loop()  # create event loop
     loop.run_until_complete(main_async(l1, l2, l3))  # run event loop until completion
